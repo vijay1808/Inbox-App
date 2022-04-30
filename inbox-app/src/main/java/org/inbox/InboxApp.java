@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
+import org.inbox.email.Email.Email;
+import org.inbox.email.Email.EmailRepository;
 import org.inbox.emaillist.EmailListItem;
 import org.inbox.emaillist.EmailListItemKey;
 import org.inbox.emaillist.EmailListItemRepository;
@@ -32,6 +34,9 @@ public class InboxApp {
 
 	@Autowired
 	EmailListItemRepository emailListItemRepository;
+
+	@Autowired
+	EmailRepository emailRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(InboxApp.class, args);
@@ -61,6 +66,8 @@ public class InboxApp {
 		for (int i = 0; i < 10; i++) {
 
 			EmailListItemKey key = new EmailListItemKey();
+			Email email = new Email();
+
 			key.setId("vijay1808");
 			key.setLabel("inbox");
 			key.setTimeUUID(Uuids.timeBased());
@@ -69,9 +76,17 @@ public class InboxApp {
 			emailListItem.setKey(key);
 			emailListItem.setIsUnRead(true);
 			emailListItem.setSubject("Subject is:" + i);
-			emailListItem.setTo(Arrays.asList("vijay1808"));
-			
+			emailListItem.setTo(Arrays.asList("vijay1808","abc","xyz"));
+
 			emailListItemRepository.save(emailListItem);
+
+			email.setId(key.getTimeUUID());
+			email.setFrom("vijay1808");
+			email.setSubject(emailListItem.getSubject());
+			email.setBody("Body " + i);
+			email.setTo(emailListItem.getTo());
+
+			emailRepository.save(email);
 		}
 
 	}

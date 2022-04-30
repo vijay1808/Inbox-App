@@ -18,7 +18,7 @@ public class EmailListItem {
 	 * CassandraRepository<Type, PrimaryKey> the value for primary key can be of single type only.
 	 * If we have multiple primary keys in our cassandra table, we have to group them as an entity
 	 * and pass the entity as a reference key.
-	 */
+	 */ 
 	@PrimaryKey
 	private EmailListItemKey key;
 

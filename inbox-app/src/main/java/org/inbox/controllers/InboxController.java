@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 
@@ -40,7 +41,7 @@ public class InboxController {
 	private EmailListItemRepository emailListItemRepository;
 	
 	@GetMapping(value = "/")
-	public String homePage(@AuthenticationPrincipal OAuth2User principal, Model model) {
+	public String homePage(@RequestParam(required=false) String folder, @AuthenticationPrincipal OAuth2User principal, Model model) {
 
 		System.out.println("pincipal " + principal);
 		if (null == principal || !StringUtils.hasText(principal.getAttribute("name"))) {
@@ -57,10 +58,14 @@ public class InboxController {
 
 		model.addAttribute("userFolders", userFolders);
 		model.addAttribute("defaultFolders", defaultFolders);
-		
-		String label="inbox";
-		List<EmailListItem> emailListItem=emailListItemRepository.findAllByKey_IdAndKey_Label(userId, label);	
-		
+		model.addAttribute("folder", folder);
+
+		System.out.println("label "+folder);
+		if(!StringUtils.hasText(folder)) {
+			folder="Inbox";
+		}
+		//String label="inbox";
+		List<EmailListItem> emailListItem=emailListItemRepository.findAllByKey_IdAndKey_Label(userId, folder);	
 		PrettyTime p= new PrettyTime();
 		emailListItem.stream().forEach(emailItem->{
 			UUID  uuisTimeStr= emailItem.getKey().getTimeUUID();

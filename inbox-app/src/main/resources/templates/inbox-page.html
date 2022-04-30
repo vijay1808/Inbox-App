@@ -60,7 +60,9 @@ footer {
 		</header>
 
 		<nav>
-
+			<div class="card">
+				<a href="/compose" class="btn btn-primary">Compose Message</a>
+			</div>
 			<div
 				th:insert="components/folder-list :: folder-list (panelName = 'Folders', folders = ${defaultFolders})"></div>
 			<div
@@ -71,10 +73,10 @@ footer {
 
 		<main>
 			<div class="card" th:if="${emailListItem}">
-				<div class="card-header">Inbox</div>
+				<div class="card-header" th:text="${folder}"></div>
 		 	<div class="card-body">
 		 		<div class="list-group">
-					<a th:each="messages:${emailListItem}" href="#" class="list-group-item list-group-item-action">
+					<a th:each="messages:${emailListItem}" th:href="@{'/emails/' +${messages.key.timeUUID}}" class="list-group-item list-group-item-action">
 						<div class="d-flex w-100 justify-content-between">
 							<h5 class="mb-1" th:text="${messages.subject}">List group item heading</h5>
 							<small th:text=${messages.agoTimeStr}></small>
